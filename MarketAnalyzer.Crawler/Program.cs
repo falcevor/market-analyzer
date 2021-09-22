@@ -2,27 +2,28 @@
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
-using Google.Apis.Util.Store;
 using MarketAnalyzer.Crawler.Model;
 using Microsoft.EntityFrameworkCore;
+using Polly;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 
 namespace MarketAnalyzer.Crawler
 {
     class Program
     {
-        // If modifying these scopes, delete your previously saved credentials
-        // at ~/.credentials/sheets.googleapis.com-dotnet-quickstart.json
         static string[] Scopes = { SheetsService.Scope.SpreadsheetsReadonly };
         static string ApplicationName = "Google Sheets API .NET Quickstart";
 
         static void Main(string[] args)
         {
             var context = new AppDbContext("User ID=postgres;Password=123456;Host=postgres-marketanalyzer;Port=5432;Database=market-analyzer;Pooling=true;Connection Lifetime=0;");
-            context.Database.Migrate();
+
+            Policy.Handle<Exception>().WaitAndRetry(5,
+                sleepDurationProvider: attempt => TimeSpan.FromSeconds(3 * attempt),
+                onRetry: (ex, attempt) => Console.WriteLine(ex.Message))
+                .Execute(() => context.Database.Migrate());
 
             var jobRun = new JobRun()
             {
@@ -43,37 +44,27 @@ namespace MarketAnalyzer.Crawler
                 jobRun.Status = JobStatus.Failure;
                 context.Update(jobRun);
                 context.SaveChanges();
+                Console.WriteLine(ex);
             }
 
             Console.Read();
         }
 
+        private static SheetsService GetSheetsService()
+        {
+            using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+            {
+                var serviceInitializer = new BaseClientService.Initializer
+                {
+                    HttpClientInitializer = GoogleCredential.FromStream(stream).CreateScoped(Scopes)
+                };
+                return new SheetsService(serviceInitializer);
+            }
+        }
+
         private static void CrawlData(AppDbContext context, JobRun jobRun)
         {
-            UserCredential credential;
-
-            using (var stream =
-                new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
-            {
-                // The file token.json stores the user's access and refresh tokens, and is created
-                // automatically when the authorization flow completes for the first time.
-                string credPath = "token.json";
-                var secrets = GoogleClientSecrets.FromStream(stream);
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    secrets.Secrets,
-                    Scopes,
-                    "user",
-                    CancellationToken.None,
-                    new FileDataStore(credPath, true)).Result;
-                Console.WriteLine("Credential file saved to: " + credPath);
-            }
-
-            // Create Google Sheets API service.
-            var service = new SheetsService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = ApplicationName,
-            });
+            var service = GetSheetsService();
 
             // Define request parameters.
             String spreadsheetId = "1ox0o-r9Ybff6UZk_4N4-Lh23m-NQvZ3aKvGCBWWbS8o";
@@ -81,8 +72,6 @@ namespace MarketAnalyzer.Crawler
             SpreadsheetsResource.ValuesResource.GetRequest request =
                     service.Spreadsheets.Values.Get(spreadsheetId, range);
 
-            // Prints the names and majors of students in a sample spreadsheet:
-            // https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
             ValueRange response = request.Execute();
             IList<IList<Object>> values = response.Values;
             if (values != null && values.Count > 0)

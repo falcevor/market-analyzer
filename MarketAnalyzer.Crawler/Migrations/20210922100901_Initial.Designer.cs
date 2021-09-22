@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MarketAnalyzer.Crawler.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210922085227_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210922100901_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -83,11 +83,11 @@ namespace MarketAnalyzer.Crawler.Migrations
                     b.Property<string>("DetailedMessage")
                         .HasColumnType("text");
 
-                    b.Property<int>("Result")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("RunDate")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

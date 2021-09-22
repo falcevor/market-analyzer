@@ -1,0 +1,7 @@
+version: '3.4'
+services:
+  marketanalyzer-crawler:
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+      - HTTP_PROXY=${HTTP_PROXY}
+      - HTTPS_PROXY=${HTTPS_PROXY}

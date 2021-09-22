@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  marketanalyzer-crawler:
+    image: ${DOCKER_REGISTRY-}marketanalyzercrawler
+    build:
+      context: .
+      dockerfile: MarketAnalyzer.Crawler/Dockerfile
+      args:
+        NUGET_REGISTRY=${NUGET_REGISTRY}
+    networks:
+      - market-net
+    links:
+      - postgres
+  
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=market-analyzer
+    hostname: postgres-marketanalyzer
+    ports:
+      - 5432:5432
+    networks:
+      - market-net
+
+networks:
+  market-net:
+    name: market-net
