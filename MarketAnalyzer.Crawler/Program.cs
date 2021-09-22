@@ -1,24 +1,31 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
-using Google.Apis.Sheets.v4.Data;
 using MarketAnalyzer.Crawler.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Polly;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace MarketAnalyzer.Crawler
 {
     class Program
     {
-        static string[] Scopes = { SheetsService.Scope.SpreadsheetsReadonly };
-        static string ApplicationName = "Google Sheets API .NET Quickstart";
+        private static string[] Scopes = { SheetsService.Scope.SpreadsheetsReadonly };
+
+        private const string spreadsheetId = "1ox0o-r9Ybff6UZk_4N4-Lh23m-NQvZ3aKvGCBWWbS8o";
+        private const string range = "Sheet1!A1:F";
 
         static void Main(string[] args)
         {
-            var context = new AppDbContext("User ID=postgres;Password=123456;Host=postgres-marketanalyzer;Port=5432;Database=market-analyzer;Pooling=true;Connection Lifetime=0;");
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("/app/Configuration/appsettings.json", false)
+                .AddEnvironmentVariables()
+                .Build();
+
+            var connectionString = config.GetConnectionString("Default");
+            var context = new AppDbContext(connectionString);
 
             Policy.Handle<Exception>().WaitAndRetry(5,
                 sleepDurationProvider: attempt => TimeSpan.FromSeconds(3 * attempt),
@@ -50,30 +57,14 @@ namespace MarketAnalyzer.Crawler
             Console.Read();
         }
 
-        private static SheetsService GetSheetsService()
-        {
-            using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
-            {
-                var serviceInitializer = new BaseClientService.Initializer
-                {
-                    HttpClientInitializer = GoogleCredential.FromStream(stream).CreateScoped(Scopes)
-                };
-                return new SheetsService(serviceInitializer);
-            }
-        }
-
         private static void CrawlData(AppDbContext context, JobRun jobRun)
         {
             var service = GetSheetsService();
 
-            // Define request parameters.
-            String spreadsheetId = "1ox0o-r9Ybff6UZk_4N4-Lh23m-NQvZ3aKvGCBWWbS8o";
-            String range = "Sheet1!A1:F";
-            SpreadsheetsResource.ValuesResource.GetRequest request =
-                    service.Spreadsheets.Values.Get(spreadsheetId, range);
+            var request = service.Spreadsheets.Values.Get(spreadsheetId, range);
 
-            ValueRange response = request.Execute();
-            IList<IList<Object>> values = response.Values;
+            var response = request.Execute();
+            var values = response.Values;
             if (values != null && values.Count > 0)
             {
                 //New: Daily volume has been added in column F. It shows the average trades per day past 30 days.
@@ -101,6 +92,18 @@ namespace MarketAnalyzer.Crawler
             jobRun.Status = JobStatus.Success;
             context.Update(jobRun);
             context.SaveChanges();
+        }
+
+        private static SheetsService GetSheetsService()
+        {
+            using (var stream = new FileStream("/app/Configuration/credentials.json", FileMode.Open, FileAccess.Read))
+            {
+                var serviceInitializer = new BaseClientService.Initializer
+                {
+                    HttpClientInitializer = GoogleCredential.FromStream(stream).CreateScoped(Scopes)
+                };
+                return new SheetsService(serviceInitializer);
+            }
         }
 
         private static void CreateItemIndicator(

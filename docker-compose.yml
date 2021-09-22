@@ -6,12 +6,12 @@ services:
     build:
       context: .
       dockerfile: MarketAnalyzer.Crawler/Dockerfile
-      args:
-        NUGET_REGISTRY=${NUGET_REGISTRY}
     networks:
       - market-net
     links:
       - postgres
+    volumes:
+      - ./MarketAnalyzer.Crawler/Configuration:/app/Configuration
   
   postgres:
     image: postgres:latest
