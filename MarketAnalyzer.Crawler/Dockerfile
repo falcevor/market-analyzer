@@ -1,13 +1,11 @@
 FROM mcr.microsoft.com/dotnet/runtime:5.0 AS base
-
-ARG NUGET_REGISTRY
-
 WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+ARG NUGET_REGISTRY
 WORKDIR /src
 COPY ["MarketAnalyzer.Crawler/MarketAnalyzer.Crawler.csproj", "MarketAnalyzer.Crawler/"]
-RUN dotnet restore "MarketAnalyzer.Crawler/MarketAnalyzer.Crawler.csproj" --source ${NUGET_REGISTRY}
+RUN dotnet restore "MarketAnalyzer.Crawler/MarketAnalyzer.Crawler.csproj" ${NUGET_REGISTRY:+ --source} ${NUGET_REGISTRY:-}
 COPY . .
 WORKDIR "/src/MarketAnalyzer.Crawler"
 RUN dotnet build "MarketAnalyzer.Crawler.csproj" -c Release -o /app/build

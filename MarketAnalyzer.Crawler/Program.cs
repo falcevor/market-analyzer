@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Polly;
 using System;
 using System.IO;
+using StackExchange.Utils;
 
 namespace MarketAnalyzer.Crawler
 {
@@ -20,8 +21,13 @@ namespace MarketAnalyzer.Crawler
         static void Main(string[] args)
         {
             var config = new ConfigurationBuilder()
-                .AddJsonFile("/app/Configuration/appsettings.json", false)
-                .AddEnvironmentVariables()
+                .WithPrefix("env", envBuilder => envBuilder
+                    .AddEnvironmentVariables()
+                )
+                .WithSubstitution(subsBuilder => subsBuilder
+                    .AddJsonFile("/app/Configuration/appsettings.json", false)
+                    .AddEnvironmentVariables()
+                )
                 .Build();
 
             var connectionString = config.GetConnectionString("Default");
