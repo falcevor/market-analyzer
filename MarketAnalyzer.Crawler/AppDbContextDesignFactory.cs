@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Design;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace MarketAnalyzer.Crawler
 {
@@ -6,7 +7,11 @@ namespace MarketAnalyzer.Crawler
     {
         public AppDbContext CreateDbContext(string[] args)
         {
-            var context = new AppDbContext("stub");
+            var options = new DbContextOptionsBuilder()
+                .UseNpgsql("stub")
+                .Options;
+
+            var context = new AppDbContext(options);
             return context;
         }
     }
