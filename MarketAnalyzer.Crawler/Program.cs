@@ -31,7 +31,7 @@ namespace MarketAnalyzer.Crawler
                 {
                     builder.ClearProviders();
                     var configBuilder = new LoggerConfiguration()
-                        .MinimumLevel.Verbose()
+                        .MinimumLevel.Information()
                         .Enrich.FromLogContext()
                         .WriteTo.Console();
 

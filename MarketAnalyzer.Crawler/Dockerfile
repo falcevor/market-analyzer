@@ -14,6 +14,8 @@ FROM build AS publish
 RUN dotnet publish "MarketAnalyzer.Crawler.csproj" -c Release -o /app/publish
 
 FROM base AS final
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "MarketAnalyzer.Crawler.dll"]
