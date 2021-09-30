@@ -1,9 +1,7 @@
 ﻿using MarketAnalyzer.Crawler.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using MarketAnalyzer.Data.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Reflection;
 
 namespace MarketAnalyzer.Crawler
 {
@@ -11,15 +9,7 @@ namespace MarketAnalyzer.Crawler
     {
         internal static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
-            var config = context.Configuration;
-            var connectionString = config.GetConnectionString("Default");
-
-            services.AddDbContextFactory<AppDbContext>(builder => 
-                builder.UseNpgsql(connectionString, options => 
-                    options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)
-                )
-            );
-
+            services.AddDataLayer();
             services.AddHostedService<CrawlerService>();
         }
     }

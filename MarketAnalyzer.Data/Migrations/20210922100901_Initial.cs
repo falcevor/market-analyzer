@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace MarketAnalyzer.Crawler.Migrations
+namespace MarketAnalyzer.Data.Migrations
 {
     public partial class Initial : Migration
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace MarketAnalyzer.Crawler
+namespace MarketAnalyzer.Data
 {
     public class AppDbContextDesignFactory : IDesignTimeDbContextFactory<AppDbContext>
     {

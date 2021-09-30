@@ -1,7 +1,7 @@
-﻿using MarketAnalyzer.Crawler.Model;
+﻿using MarketAnalyzer.Data.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace MarketAnalyzer.Crawler
+namespace MarketAnalyzer.Data
 {
     public class AppDbContext : DbContext
     {

@@ -1,4 +1,4 @@
-﻿namespace MarketAnalyzer.Crawler.Model
+﻿namespace MarketAnalyzer.Data.Model
 {
     public class ItemIndicator
     {

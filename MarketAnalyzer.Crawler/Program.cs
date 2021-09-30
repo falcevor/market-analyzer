@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using StackExchange.Utils;
 using Microsoft.Extensions.Hosting;
-using MarketAnalyzer.Crawler.Extensions;
+using MarketAnalyzer.Data.Extensions;
 using Serilog;
 using Microsoft.Extensions.Logging;
 

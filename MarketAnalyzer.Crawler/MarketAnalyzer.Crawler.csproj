@@ -34,6 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MarketAnalyzer.Data\MarketAnalyzer.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Configuration\appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

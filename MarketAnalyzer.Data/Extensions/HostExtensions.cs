@@ -8,7 +8,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 
-namespace MarketAnalyzer.Crawler.Extensions
+namespace MarketAnalyzer.Data.Extensions
 {
     public static class HostExtenisions
     {

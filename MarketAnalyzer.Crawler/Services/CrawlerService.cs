@@ -1,7 +1,8 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
-using MarketAnalyzer.Crawler.Model;
+using MarketAnalyzer.Data;
+using MarketAnalyzer.Data.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
