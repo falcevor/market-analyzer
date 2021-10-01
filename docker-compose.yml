@@ -20,6 +20,13 @@ services:
     networks:
       - market-net
 
+  grafana:
+    image: ${DOCKER_REGISTRY-}marketanalyzergrafana
+    build:
+      context: .\grafana
+    networks:
+      - market-net
+
 networks:
   market-net:
     name: market-net
