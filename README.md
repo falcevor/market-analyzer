@@ -1,5 +1,5 @@
 # Анализатор (в будущем (надеюсь)) аукциона BDO
 В идеале - рекомендательная система по закупке и продаже товарных единиц на основе динамики цен с красивыми графиками.  
 Пока что только красивые графики.  
-![](https://raw.githubusercontent.com/falcevor/market-analyzer/3607cec38492d318d52dbb8e14f4024ad51d51ea/images/grafana-demo.png)
+![](https://raw.githubusercontent.com/falcevor/market-analyzer/media/images/grafana-demo.jpg)
 *Красивые графики*
