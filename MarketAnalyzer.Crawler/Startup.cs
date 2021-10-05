@@ -17,7 +17,7 @@ namespace MarketAnalyzer.Crawler
 
             services.AddQuartz(config => config
                 .AddJob<CrawlerJob>(job => job
-                    .WithDescription("Merket data crawler job")
+                    .WithDescription("Market data crawler job")
                     .WithIdentity(jobKey)
 
                 )
