@@ -5,16 +5,16 @@ using MarketAnalyzer.Data;
 using MarketAnalyzer.Data.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Polly;
+using Quartz;
 using System;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace MarketAnalyzer.Crawler.Services
+namespace MarketAnalyzer.Crawler.Jobs
 {
-    public class CrawlerService : BackgroundService
+    public class CrawlerJob : IJob
     {
         private static string[] Scopes = { SheetsService.Scope.SpreadsheetsReadonly };
 
@@ -22,12 +22,12 @@ namespace MarketAnalyzer.Crawler.Services
         private const string range = "Sheet1!A1:F";
 
         private IConfiguration _config;
-        private ILogger<CrawlerService> _logger;
+        private ILogger<CrawlerJob> _logger;
         private IDbContextFactory<AppDbContext> _dbContextFactory;
 
-        public CrawlerService(
-            IConfiguration config, 
-            ILogger<CrawlerService> logger, 
+        public CrawlerJob(
+            IConfiguration config,
+            ILogger<CrawlerJob> logger,
             IDbContextFactory<AppDbContext> dbContextFactory
         )
         {
@@ -36,33 +36,45 @@ namespace MarketAnalyzer.Crawler.Services
             _dbContextFactory = dbContextFactory;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        public async Task Execute(IJobExecutionContext context)
         {
-            var context = _dbContextFactory.CreateDbContext();
+            await Policy.Handle<Exception>()
+                .WaitAndRetryForeverAsync(
+                    sleepDurationProvider: attempt => TimeSpan.FromMinutes(attempt),
+                    onRetry: (excetion, attempt) => _logger.LogWarning("Job retrying after failure. Attempt: {attempt}", attempt)
+                )
+                .ExecuteAsync(async () => await ExecuteAttempt());
+        }
+
+        public async Task ExecuteAttempt()
+        {
+            var dbContext = _dbContextFactory.CreateDbContext();
 
             var jobRun = new JobRun()
             {
                 RunDate = DateTime.Now,
                 Status = JobStatus.Processing
             };
-            context.Add(jobRun);
-            await context.SaveChangesAsync();
+            dbContext.Add(jobRun);
+            await dbContext.SaveChangesAsync();
 
-            _logger.LogInformation($"Job started! Job run id: {jobRun.Id}");
-            
+            _logger.LogInformation("Job started! Run id: {jobRunId}", jobRun.Id);
+
             try
             {
-                await CrawlData(context, jobRun);
+                await CrawlData(dbContext, jobRun);
             }
             catch (Exception ex)
             {
                 jobRun.DetailedMessage = ex.Message;
                 jobRun.Status = JobStatus.Failure;
-                context.Update(jobRun);
-                context.SaveChanges();
-                _logger.LogError(ex, $"Job {jobRun.Id} got some error :(");
+                dbContext.Update(jobRun);
+                dbContext.SaveChanges();
+                _logger.LogError(ex, "Job {jobRunId} got some error :(", jobRun.Id);
 
             }
+
+            _logger.LogInformation("Job finished! Run id: {jobRunId}", jobRun.Id);
         }
 
         private async Task CrawlData(AppDbContext context, JobRun jobRun)

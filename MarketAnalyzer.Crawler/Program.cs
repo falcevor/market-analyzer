@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using MarketAnalyzer.Data.Extensions;
 using Serilog;
 using Microsoft.Extensions.Logging;
+using Serilog.Events;
 
 namespace MarketAnalyzer.Crawler
 {
@@ -32,6 +33,7 @@ namespace MarketAnalyzer.Crawler
                     builder.ClearProviders();
                     var configBuilder = new LoggerConfiguration()
                         .MinimumLevel.Information()
+                        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                         .Enrich.FromLogContext()
                         .WriteTo.Console();
 
