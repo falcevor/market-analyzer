@@ -23,7 +23,7 @@ namespace MarketAnalyzer.Crawler
                         .AddEnvironmentVariables()
                     )
                     .WithSubstitution(subsBuilder => subsBuilder
-                        .AddJsonFile("/app/Configuration/appsettings.json", false)
+                        .AddJsonFile("/app/Configuration/appsettings.json", true)
                         .AddEnvironmentVariables()
                     )
                 )

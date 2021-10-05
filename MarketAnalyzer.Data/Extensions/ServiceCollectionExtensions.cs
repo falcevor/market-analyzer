@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace MarketAnalyzer.Data.Extensions
 {
@@ -15,7 +14,7 @@ namespace MarketAnalyzer.Data.Extensions
 
             services.AddDbContextFactory<AppDbContext>(builder =>
                 builder.UseNpgsql(connectionString, options =>
-                    options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)
+                    options.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
                 )
             );
             return services;
