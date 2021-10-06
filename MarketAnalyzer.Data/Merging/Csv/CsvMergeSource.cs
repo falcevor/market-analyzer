@@ -44,7 +44,7 @@ namespace MarketAnalyzer.Data.Merging.Csv
         {
             using var reader = new StreamReader(new MemoryStream(_itemsFile), Encoding.UTF8);
             using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
-            var records = csvReader.GetRecordsAsync<Item>();
+            var records = csvReader.GetRecordsAsync<ItemCsv>();
 
             var result = new List<Item>();
             await foreach (var record in records)
@@ -62,7 +62,7 @@ namespace MarketAnalyzer.Data.Merging.Csv
         {
             using var reader = new StreamReader(new MemoryStream(_itemIndicatorsFile), Encoding.UTF8);
             using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
-            var records = csvReader.GetRecordsAsync<ItemIndicator>();
+            var records = csvReader.GetRecordsAsync<ItemIndicatorCsv>();
 
             var result = new List<ItemIndicator>();
             await foreach (var record in records)

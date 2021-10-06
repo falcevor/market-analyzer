@@ -7,8 +7,8 @@ namespace MarketAnalyzer.Data.Merging
     {
         Task TruncateAsync();
         Task AddJobRunAsync(JobRun jobRun);
-        Task AddItemAsync(Item jobRun);
-        Task AddItemIndicatorAsync(ItemIndicator jobRun);
+        Task AddItemAsync(Item item);
+        Task AddItemIndicatorAsync(ItemIndicator itemIndicator);
         Task SaveChangesAsync();
     }
 }
