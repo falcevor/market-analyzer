@@ -22,7 +22,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 2,
+  "id": null,
   "links": [],
   "panels": [
     {
@@ -117,7 +117,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "select hahaha.name,\r\n    round((hahaha.current - hahaha.min)::numeric / hahaha.min, 3 ) * 100 as mindiff,\r\n    hahaha.min,\r\n    hahaha.current\r\nfrom\r\n(\r\n    select minmax.*,\r\n    cur.price as current\r\nfrom\r\n(\r\n    select\r\n      itm.\"Id\" as id,\r\n      itm.\"Name\" as name,\r\n      min(ii.\"BasePrice\") as min\r\n    from \"ItemIndicators\" as ii\r\n    join \"Items\" as itm\r\n      on itm.\"Id\" = ii.\"ItemId\"\r\n    join \"JobRuns\" as job\r\n      on job.\"Id\" = ii.\"JobRunId\"\r\n    group by itm.\"Id\"\r\n) as minmax\r\njoin\r\n(\r\n    select\r\n      ii2.\"ItemId\" as id,\r\n      ii2.\"BasePrice\" as price\r\n    from \"ItemIndicators\" as ii2\r\n    join (select max(jb.\"Id\") as id from \"JobRuns\" as jb) as jb2\r\n      on jb2.id = ii2.\"JobRunId\"\r\n) as cur\r\n  on cur.id = minmax.id\r\n) as hahaha\r\norder by mindiff desc\r\nlimit 100",
+          "rawSql": "select hahaha.name,\r\n    round((hahaha.current - hahaha.min)::numeric / hahaha.min, 3 ) * 100 as mindiff,\r\n    hahaha.min,\r\n    hahaha.current\r\nfrom\r\n(\r\n    select minmax.*,\r\n    cur.price as current\r\nfrom\r\n(\r\n    select\r\n      itm.\"Id\" as id,\r\n      itm.\"Name\" as name,\r\n      min(ii.\"BasePrice\") as min\r\n    from \"ItemIndicators\" as ii\r\n    join \"Items\" as itm\r\n      on itm.\"Id\" = ii.\"ItemId\"\r\n    join \"JobRuns\" as job\r\n      on job.\"Id\" = ii.\"JobRunId\"\r\n    where $__timeFilter(job.\"RunDate\")\r\n    group by itm.\"Id\"\r\n) as minmax\r\njoin\r\n(\r\n    select\r\n      ii2.\"ItemId\" as id,\r\n      ii2.\"BasePrice\" as price\r\n    from \"ItemIndicators\" as ii2\r\n    join (select max(jb.\"Id\") as id from \"JobRuns\" as jb) as jb2\r\n      on jb2.id = ii2.\"JobRunId\"\r\n) as cur\r\n  on cur.id = minmax.id\r\n) as hahaha\r\norder by mindiff desc\r\nlimit 100",
           "refId": "A",
           "select": [
             [
@@ -219,7 +219,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "select hahaha.name,\r\n    round((hahaha.max - hahaha.current)::numeric / hahaha.max, 3 ) * 100 as maxdiff,\r\n    hahaha.max,\r\n    hahaha.current\r\nfrom\r\n(\r\n    select minmax.*,\r\n    cur.price as current\r\nfrom\r\n(\r\n    select\r\n      itm.\"Id\" as id,\r\n      itm.\"Name\" as name,\r\n      max(ii.\"BasePrice\") as max\r\n    from \"ItemIndicators\" as ii\r\n    join \"Items\" as itm\r\n      on itm.\"Id\" = ii.\"ItemId\"\r\n    join \"JobRuns\" as job\r\n      on job.\"Id\" = ii.\"JobRunId\"\r\n    group by itm.\"Id\"\r\n) as minmax\r\njoin\r\n(\r\n    select\r\n      ii2.\"ItemId\" as id,\r\n      ii2.\"BasePrice\" as price\r\n    from \"ItemIndicators\" as ii2\r\n    join (select max(jb.\"Id\") as id from \"JobRuns\" as jb) as jb2\r\n      on jb2.id = ii2.\"JobRunId\"\r\n) as cur\r\n  on cur.id = minmax.id\r\n) as hahaha\r\norder by maxdiff desc\r\nlimit 100",
+          "rawSql": "select hahaha.name,\r\n    round((hahaha.max - hahaha.current)::numeric / hahaha.max, 3 ) * 100 as maxdiff,\r\n    hahaha.max,\r\n    hahaha.current\r\nfrom\r\n(\r\n    select minmax.*,\r\n    cur.price as current\r\nfrom\r\n(\r\n    select\r\n      itm.\"Id\" as id,\r\n      itm.\"Name\" as name,\r\n      max(ii.\"BasePrice\") as max\r\n    from \"ItemIndicators\" as ii\r\n    join \"Items\" as itm\r\n      on itm.\"Id\" = ii.\"ItemId\"\r\n    join \"JobRuns\" as job\r\n      on job.\"Id\" = ii.\"JobRunId\"\r\n    where $__timeFilter(job.\"RunDate\")\r\n    group by itm.\"Id\"\r\n) as minmax\r\njoin\r\n(\r\n    select\r\n      ii2.\"ItemId\" as id,\r\n      ii2.\"BasePrice\" as price\r\n    from \"ItemIndicators\" as ii2\r\n    join (select max(jb.\"Id\") as id from \"JobRuns\" as jb) as jb2\r\n      on jb2.id = ii2.\"JobRunId\"\r\n) as cur\r\n  on cur.id = minmax.id\r\n) as hahaha\r\norder by maxdiff desc\r\nlimit 100",
           "refId": "A",
           "select": [
             [
@@ -570,7 +570,7 @@
     "list": []
   },
   "time": {
-    "from": "now-7d",
+    "from": "now-30d",
     "to": "now"
   },
   "timepicker": {
@@ -579,5 +579,5 @@
   "timezone": "",
   "title": "MarketAnalyzer",
   "uid": "RMtIngv7k",
-  "version": 5
+  "version": 2
 }

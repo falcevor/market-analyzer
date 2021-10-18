@@ -11,7 +11,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarketAnalyzer.Data", "MarketAnalyzer.Data\MarketAnalyzer.Data.csproj", "{2C834DEE-279D-47EC-B25D-24CF808D014A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketAnalyzer.UnitTests", "..\MarketAnalyzer.UnitTests\MarketAnalyzer.UnitTests.csproj", "{DC1B116E-F8FB-4792-9283-D5F19F86DB16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarketAnalyzer.UnitTests", "MarketAnalyzer.UnitTests\MarketAnalyzer.UnitTests.csproj", "{A4F29D8D-DBC5-44BA-BAA9-F555D9E364A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{2C834DEE-279D-47EC-B25D-24CF808D014A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C834DEE-279D-47EC-B25D-24CF808D014A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C834DEE-279D-47EC-B25D-24CF808D014A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DC1B116E-F8FB-4792-9283-D5F19F86DB16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC1B116E-F8FB-4792-9283-D5F19F86DB16}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC1B116E-F8FB-4792-9283-D5F19F86DB16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC1B116E-F8FB-4792-9283-D5F19F86DB16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4F29D8D-DBC5-44BA-BAA9-F555D9E364A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4F29D8D-DBC5-44BA-BAA9-F555D9E364A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4F29D8D-DBC5-44BA-BAA9-F555D9E364A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4F29D8D-DBC5-44BA-BAA9-F555D9E364A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

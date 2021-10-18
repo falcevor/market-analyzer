@@ -19,6 +19,8 @@ services:
     image: postgres:latest
     networks:
       - market-net
+    volumes:
+      - ./postgresql-data:/var/lib/postgresql/data/
 
   grafana:
     image: ${DOCKER_REGISTRY-}marketanalyzergrafana
@@ -26,6 +28,7 @@ services:
       context: .\grafana
     networks:
       - market-net
+
 
 networks:
   market-net:

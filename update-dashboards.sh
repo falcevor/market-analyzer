@@ -25,6 +25,8 @@ main() {
   local dashboards=$(list_dashboards)
   local dashboard_json
 
+  echo $dashboards
+
   show_config
 
   for dashboard in $dashboards; do
@@ -75,7 +77,7 @@ get_dashboard() {
   curl \
     --silent \
     --user "$LOGIN" \
-    $URL/api/dashboards/db/$dashboard |
+    $URL/api/dashboards/uid/$dashboard |
     jq '.dashboard | .id = null'
 }
 
@@ -92,7 +94,7 @@ list_dashboards() {
     --silent \
     --user "$LOGIN" \
     $URL/api/search |
-    jq -r '.[] | select(.type == "dash-db") | .uri' |
+    jq -r '.[] | select(.type == "dash-db") | .uid' |
     cut -d '/' -f2
 }
 
