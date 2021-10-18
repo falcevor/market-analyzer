@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MarketAnalyzer\MarketAnalyzer.Data\MarketAnalyzer.Data.csproj" />
+    <ProjectReference Include="..\MarketAnalyzer.Data\MarketAnalyzer.Data.csproj" />
   </ItemGroup>
 
 </Project>
