@@ -13,6 +13,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarketAnalyzer.Data", "Mark
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarketAnalyzer.UnitTests", "MarketAnalyzer.UnitTests\MarketAnalyzer.UnitTests.csproj", "{A4F29D8D-DBC5-44BA-BAA9-F555D9E364A5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{77F04B8C-0D3B-4A84-A030-3B0A90E72C7D}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose-down_dev.bat = docker-compose-down_dev.bat
+		docker-compose-up_dev.bat = docker-compose-up_dev.bat
+		docker-compose-build_dev.bat = docker-compose-build_dev.bat
+		update-dashboards.bat = update-dashboards.bat
+		update-dashboards.sh = update-dashboards.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

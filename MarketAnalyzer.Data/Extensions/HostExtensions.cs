@@ -16,11 +16,17 @@ namespace MarketAnalyzer.Data.Extensions
         {
             using var scope = host.Services.CreateScope();
             var services = scope.ServiceProvider;
-            
+
+            var logger = host.Services.GetRequiredService<ILogger<DbContext>>();
+            logger.LogInformation("Database migration process started.");
+
             var contextTypes = Assembly.GetExecutingAssembly()
                 .GetTypes()
                 .Where(x => x.BaseType == typeof(DbContext))
                 .ToList();
+
+            logger.LogInformation("DbContext from assembly to migrate {0}", 
+                string.Join(", ", contextTypes.Select(x => x.FullName)));
 
             contextTypes.ForEach(contextType =>
             {
@@ -48,8 +54,8 @@ namespace MarketAnalyzer.Data.Extensions
             return Policy
                 .Handle<DbException>()
                 .WaitAndRetry(
-                    retryCount: 5,
-                    sleepDurationProvider: attempt => TimeSpan.FromSeconds(attempt),
+                    retryCount: 15,
+                    sleepDurationProvider: attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
                     onRetry: (ex, duration, attempt, context) =>
                         logger.LogWarning(ex, "Exception during context migration (attempt {attempt})",
                             attempt)
