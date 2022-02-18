@@ -19,8 +19,8 @@ namespace MarketAnalyzer.Crawler
                 .AddJob<CrawlerJob>(job => job
                     .WithDescription("Market data crawler job")
                     .WithIdentity(jobKey)
-
                 )
+
                 .AddTrigger(trigger => trigger
                     .StartNow()
                     .WithSimpleSchedule(schedule => schedule
