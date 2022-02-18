@@ -1,0 +1,32 @@
+﻿[
+  {
+    "Count": 10,
+    "TotalTrades": 100,
+    "BasePrice": 60000,
+    "DailyVolume": 15
+  },
+  {
+    "Count": 14,
+    "TotalTrades": 120,
+    "BasePrice": 62000,
+    "DailyVolume": 12
+  },
+  {
+    "Count": 12,
+    "TotalTrades": 150,
+    "BasePrice": 65000,
+    "DailyVolume": 1
+  },
+  {
+    "Count": 7,
+    "TotalTrades": 170,
+    "BasePrice": 61000,
+    "DailyVolume": 43
+  },
+  {
+    "Count": 0,
+    "TotalTrades": 190,
+    "BasePrice": 52000,
+    "DailyVolume": 0
+  }
+]

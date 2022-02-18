@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -23,6 +23,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MarketAnalyzer.Data\MarketAnalyzer.Data.csproj" />
+    <ProjectReference Include="..\MarketAnalyzer.Domain\MarketAnalyzer.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Domain\StatisticAggregatorTests_Data.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  <DependentUpon>StatisticAggregatorTests.cs</DependentUpon>
+    </None>
   </ItemGroup>
 
 </Project>
