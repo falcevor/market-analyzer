@@ -8,6 +8,7 @@ namespace MarketAnalyzer.Data
         public DbSet<JobRun> JobRuns { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemIndicator> ItemIndicators { get; set; }
+        public DbSet<ItemWeekIndicator> ItemWeekIndicators { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options) { }
     }
