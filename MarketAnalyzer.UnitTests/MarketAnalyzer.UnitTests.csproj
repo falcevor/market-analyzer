@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MarketAnalyzer.Core\MarketAnalyzer.Core.csproj" />
     <ProjectReference Include="..\MarketAnalyzer.Data\MarketAnalyzer.Data.csproj" />
     <ProjectReference Include="..\MarketAnalyzer.Domain\MarketAnalyzer.Domain.csproj" />
   </ItemGroup>
