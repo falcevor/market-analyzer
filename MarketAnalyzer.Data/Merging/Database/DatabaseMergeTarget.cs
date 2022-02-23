@@ -1,4 +1,4 @@
-﻿using MarketAnalyzer.Data.Model;
+﻿using MarketAnalyzer.Core.Model;
 using Microsoft.EntityFrameworkCore;
 using Polly;
 using System;

@@ -1,4 +1,4 @@
-﻿using MarketAnalyzer.Data.Model;
+﻿using MarketAnalyzer.Core.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

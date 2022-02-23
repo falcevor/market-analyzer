@@ -1,6 +1,6 @@
 ﻿using MarketAnalyzer.Data;
 using MarketAnalyzer.Data.Merging.Database;
-using MarketAnalyzer.Data.Model;
+using MarketAnalyzer.Core.Model;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System.Threading;

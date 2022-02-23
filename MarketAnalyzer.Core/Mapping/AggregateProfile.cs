@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MarketAnalyzer.Data.Model;
+using MarketAnalyzer.Core.Model;
 using MarketAnalyzer.Domain.Model;
 
 namespace MarketAnalyzer.Core.Mapping

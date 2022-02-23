@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using MarketAnalyzer.Data.Merging.Csv;
-using MarketAnalyzer.Data.Model;
+using MarketAnalyzer.Core.Model;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
