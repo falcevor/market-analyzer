@@ -11,7 +11,7 @@ namespace MarketAnalyzer.UnitTests.Core.DateTimeExtensions
         public void Move_to_day_end()
         {
             var date = new DateTime(2022, 2, 19);
-            date.MoveToDayEnd().Should().Be(new DateTime(2022, 2, 19, 23, 59, 59));
+            date.DayEnd().Should().Be(new DateTime(2022, 2, 19, 23, 59, 59));
         }
 
         [Fact]
@@ -20,32 +20,32 @@ namespace MarketAnalyzer.UnitTests.Core.DateTimeExtensions
             var date = new DateTime(2022, 2, 1);
             date.WeekBounds().Should().Be(
                 (new DateTime(2022, 2, 1),
-                 new DateTime(2022, 2, 7).MoveToDayEnd())
+                 new DateTime(2022, 2, 7).DayEnd())
             );
 
             date = new DateTime(2022, 2, 4);
             date.WeekBounds().Should().Be(
                 (new DateTime(2022, 2, 1),
-                 new DateTime(2022, 2, 7).MoveToDayEnd())
+                 new DateTime(2022, 2, 7).DayEnd())
             );
 
             date = new DateTime(2022, 2, 7);
             date.WeekBounds().Should().Be(
                 (new DateTime(2022, 2, 1),
-                 new DateTime(2022, 2, 7).MoveToDayEnd())
+                 new DateTime(2022, 2, 7).DayEnd())
             );
 
 
             date = new DateTime(2022, 2, 22);
             date.WeekBounds().Should().Be(
                 (new DateTime(2022, 2, 22),
-                 new DateTime(2022, 2, 28).MoveToDayEnd())
+                 new DateTime(2022, 2, 28).DayEnd())
             );
 
             date = new DateTime(2022, 2, 28);
             date.WeekBounds().Should().Be(
                 (new DateTime(2022, 2, 22),
-                 new DateTime(2022, 2, 28).MoveToDayEnd())
+                 new DateTime(2022, 2, 28).DayEnd())
             );
         }
 
@@ -56,31 +56,31 @@ namespace MarketAnalyzer.UnitTests.Core.DateTimeExtensions
             var date = new DateTime(2022, 1, 29);
             date.WeekBounds().Should().Be(
                 (new DateTime(2022, 1, 29),
-                 new DateTime(2022, 1, 31).MoveToDayEnd())
+                 new DateTime(2022, 1, 31).DayEnd())
             );
 
             date = new DateTime(2022, 1, 30);
             date.WeekBounds().Should().Be(
                 (new DateTime(2022, 1, 29),
-                 new DateTime(2022, 1, 31).MoveToDayEnd())
+                 new DateTime(2022, 1, 31).DayEnd())
             );
 
             date = new DateTime(2022, 1, 31);
             date.WeekBounds().Should().Be(
                 (new DateTime(2022, 1, 29),
-                 new DateTime(2022, 1, 31).MoveToDayEnd())
+                 new DateTime(2022, 1, 31).DayEnd())
             );
 
             date = new DateTime(2022, 4, 29);
             date.WeekBounds().Should().Be(
                 (new DateTime(2022, 4, 29),
-                 new DateTime(2022, 4, 30).MoveToDayEnd())
+                 new DateTime(2022, 4, 30).DayEnd())
             );
 
             date = new DateTime(2022, 4, 30);
             date.WeekBounds().Should().Be(
                 (new DateTime(2022, 4, 29),
-                 new DateTime(2022, 4, 30).MoveToDayEnd())
+                 new DateTime(2022, 4, 30).DayEnd())
             );
 
         }

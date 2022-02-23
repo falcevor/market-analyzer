@@ -1,5 +1,7 @@
-﻿using MarketAnalyzer.Crawler.Jobs;
+﻿using MarketAnalyzer.Core.Extensions;
+using MarketAnalyzer.Crawler.Jobs;
 using MarketAnalyzer.Data.Extensions;
+using MarketAnalyzer.Domain.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quartz;
@@ -11,14 +13,17 @@ namespace MarketAnalyzer.Crawler
     {
         internal static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
+            services.AddDomainLayer();
+            services.AddApplicationLayer();
             services.AddDataLayer();
 
-            var jobKey = new JobKey("MarketCrawlerJob");
+            var crawlerJobKey = new JobKey("MarketCrawlerJob");
+            var aggregationJobKey = new JobKey("AggregationJob");
 
             services.AddQuartz(config => config
                 .AddJob<CrawlerJob>(job => job
                     .WithDescription("Market data crawler job")
-                    .WithIdentity(jobKey)
+                    .WithIdentity(crawlerJobKey)
                 )
 
                 .AddTrigger(trigger => trigger
@@ -27,7 +32,22 @@ namespace MarketAnalyzer.Crawler
                         .WithInterval(TimeSpan.FromHours(4))
                         .RepeatForever()
                     )
-                    .ForJob(jobKey)
+                    .ForJob(crawlerJobKey)
+                )
+
+
+                .AddJob<AggregationJob>(job => job
+                    .WithDescription("Week aggregator job")
+                    .WithIdentity(aggregationJobKey)
+                )
+
+                .AddTrigger(trigger => trigger
+                    .StartNow()
+                    .WithSimpleSchedule(schedule => schedule
+                        .WithInterval(TimeSpan.FromHours(12))
+                        .RepeatForever()
+                    )
+                    .ForJob(aggregationJobKey)
                 )
                 .UseMicrosoftDependencyInjectionJobFactory()
             );

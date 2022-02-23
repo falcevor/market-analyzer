@@ -1,5 +1,9 @@
-﻿using MarketAnalyzer.Core.Extensions;
+﻿using AutoMapper;
+using MarketAnalyzer.Core.Extensions;
+using MarketAnalyzer.Core.Temporality;
 using MarketAnalyzer.Data;
+using MarketAnalyzer.Data.Model;
+using MarketAnalyzer.Domain.Model;
 using MarketAnalyzer.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,40 +11,72 @@ namespace MarketAnalyzer.Core.Calculation
 {
     internal class AggregationService : IAggregationService
     {
-        private readonly IStatisticAggregator _aggregationService;
-        private readonly AppDbContext _dbContext; // TODO: INVERSE DEPENDENCY!
+        private readonly IStatisticAggregator _service;
+        private readonly IDbContextFactory<AppDbContext> _dbContextFactory; // TODO: INVERSE DEPENDENCY!
+        private readonly IMapper _mapper;
+        private readonly WeekIntervalProducer _weekProducer;
 
-        public AggregationService(IStatisticAggregator aggregationService, 
-            AppDbContext dbContext)
+
+        public AggregationService(IStatisticAggregator aggregationService,
+            IMapper mapper, 
+            IDbContextFactory<AppDbContext> dbContextFactory)
         {
-            _aggregationService = aggregationService;
-            _dbContext = dbContext;
+            _service = aggregationService;
+            _mapper = mapper;
+            _weekProducer = new WeekIntervalProducer();
+            _dbContextFactory = dbContextFactory;
         }
 
         public async Task AggregateItemIndicatorsByWeekAsync()
         {
-            var lastDate = await GetLastAggregationDate();
+            var dbContext = _dbContextFactory.CreateDbContext();
+            var lastDate = await GetLastAggregationDate(dbContext);
 
-            while (lastDate.IsWeekInPastFrom(DateTime.Now))
+            if (!lastDate.IsWeekInPastFrom(DateTime.Now))
+                return;
+
+            var weekIntervals = _weekProducer.Produce(lastDate, DateTime.Now.FirstDayOfWeek().AddDays(-1));
+
+            foreach (var interval in weekIntervals)
             {
-                lastDate = lastDate.MoveToFirstDayOfNextWeek();
-                (var dateFrom, var dateTo) = lastDate.WeekBounds();
-                await AggregateInternal(dateFrom, dateTo);
+                await AggregateWeekInternal(dbContext, interval.From, interval.To);
             }
         }
         
-        private async Task<DateTime> GetLastAggregationDate()
+        private async Task<DateTime> GetLastAggregationDate(AppDbContext dbContext)
         {
-            if (!_dbContext.ItemWeekIndicators.Any())
-                return await _dbContext.JobRuns.Select(x => x.RunDate).MinAsync();
+            if (!dbContext.ItemWeekIndicators.Any())
+                return await dbContext.JobRuns.Select(x => x.RunDate).MinAsync();
 
-            return await _dbContext.ItemWeekIndicators.Select(x => x.StartDate).MaxAsync();
+            return await dbContext.ItemWeekIndicators.Select(x => x.StartDate).MaxAsync();
         }
 
-        private Task AggregateInternal(DateTime dateFrom, DateTime dateTo)
+        private async Task AggregateWeekInternal(AppDbContext dbContext, DateTime dateFrom, DateTime dateTo)
         {
-            // TODO: implement calculation invocation and saving to storage
-            throw new NotImplementedException();
+            var weekIndicators = dbContext.ItemIndicators
+                .Include(x => x.JobRun)
+                .AsNoTracking()
+                .Where(x => x.JobRun.RunDate >= dateFrom && x.JobRun.RunDate <= dateTo)
+                .ToList();
+
+            var items = weekIndicators.GroupBy(x => x.ItemId);
+
+            foreach (var item in items)
+            {
+                var result = AggregateItem(item.Select(x => _mapper.Map<ItemStatistic>(x)));
+                result.ItemId = item.Key;
+                result.StartDate = dateFrom;
+                result.Duration = (dateTo - dateFrom).Days;
+                await dbContext.ItemWeekIndicators.AddAsync(result);
+            }
+            await dbContext.SaveChangesAsync();
+        }
+
+        private ItemWeekIndicator AggregateItem(IEnumerable<ItemStatistic> items)
+        {
+            var aggregated = _service.Aggregate(items);
+            var result = _mapper.Map<ItemWeekIndicator>(aggregated);
+            return result;
         }
     }
 }

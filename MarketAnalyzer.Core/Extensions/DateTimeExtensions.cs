@@ -1,4 +1,6 @@
-﻿namespace MarketAnalyzer.Core.Extensions
+﻿using MarketAnalyzer.Core.Model;
+
+namespace MarketAnalyzer.Core.Extensions
 {
     public static class DateTimeExtensions
     {
@@ -32,20 +34,20 @@
             return remains > 7 ? 7 : remains;
         }
 
-        public static (DateTime, DateTime) WeekBounds(this DateTime date)
+        public static DateTimeInterval WeekBounds(this DateTime date)
         {
             var firstDay = date.FirstDayOfWeek();
-            var lastDay = date.LastDayOfWeek().MoveToDayEnd();
+            var lastDay = date.LastDayOfWeek().DayEnd();
 
-            return (firstDay, lastDay);
+            return new DateTimeInterval(firstDay, lastDay);
         }
 
-        public static DateTime MoveToDayEnd(this DateTime date) 
+        public static DateTime DayEnd(this DateTime date) 
         {
             return new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
         }
 
-        public static DateTime MoveToFirstDayOfNextWeek(this DateTime date)
+        public static DateTime FirstDayOfNextWeek(this DateTime date)
         {
             return date.LastDayOfWeek().AddDays(1);
         }
