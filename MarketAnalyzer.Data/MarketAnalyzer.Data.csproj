@@ -13,4 +13,8 @@
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MarketAnalyzer.Core\MarketAnalyzer.Core.csproj" />
+  </ItemGroup>
+
 </Project>

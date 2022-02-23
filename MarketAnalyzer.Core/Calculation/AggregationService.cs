@@ -1,36 +1,41 @@
 ﻿using AutoMapper;
+using MarketAnalyzer.Core.Abstraction;
 using MarketAnalyzer.Core.Extensions;
+using MarketAnalyzer.Core.Model;
 using MarketAnalyzer.Core.Temporality;
-using MarketAnalyzer.Data;
-using MarketAnalyzer.Data.Model;
 using MarketAnalyzer.Domain.Model;
 using MarketAnalyzer.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace MarketAnalyzer.Core.Calculation
 {
-    internal class AggregationService : IAggregationService
+    public class AggregationService : IAggregationService
     {
         private readonly IStatisticAggregator _service;
-        private readonly IDbContextFactory<AppDbContext> _dbContextFactory; // TODO: INVERSE DEPENDENCY!
         private readonly IMapper _mapper;
         private readonly WeekIntervalProducer _weekProducer;
 
+        private readonly IStore<ItemIndicator> _indicatorStore;
+        private readonly IStore<ItemWeekIndicator> _weekIndicatorStore;
+        private readonly IStore<JobRun> _jobRunStore;
 
-        public AggregationService(IStatisticAggregator aggregationService,
-            IMapper mapper, 
-            IDbContextFactory<AppDbContext> dbContextFactory)
+        public AggregationService(IStatisticAggregator service,
+            IMapper mapper,
+            IStore<ItemIndicator> indicatorStore, 
+            IStore<ItemWeekIndicator> weekIndicatorStore, 
+            IStore<JobRun> jobRunStore)
         {
-            _service = aggregationService;
+            _service = service;
             _mapper = mapper;
+            _indicatorStore = indicatorStore;
+            _weekIndicatorStore = weekIndicatorStore;
+            _jobRunStore = jobRunStore;
             _weekProducer = new WeekIntervalProducer();
-            _dbContextFactory = dbContextFactory;
         }
 
         public async Task AggregateItemIndicatorsByWeekAsync()
         {
-            var dbContext = _dbContextFactory.CreateDbContext();
-            var lastDate = await GetLastAggregationDate(dbContext);
+            var lastDate = await GetLastAggregationDate();
 
             if (!lastDate.IsWeekInPastFrom(DateTime.Now))
                 return;
@@ -39,21 +44,21 @@ namespace MarketAnalyzer.Core.Calculation
 
             foreach (var interval in weekIntervals)
             {
-                await AggregateWeekInternal(dbContext, interval.From, interval.To);
+                await AggregateWeekInternal(interval.From, interval.To);
             }
         }
         
-        private async Task<DateTime> GetLastAggregationDate(AppDbContext dbContext)
+        private Task<DateTime> GetLastAggregationDate()
         {
-            if (!dbContext.ItemWeekIndicators.Any())
-                return await dbContext.JobRuns.Select(x => x.RunDate).MinAsync();
-
-            return await dbContext.ItemWeekIndicators.Select(x => x.StartDate).MaxAsync();
+            if (!_weekIndicatorStore.Values.Any())
+                return Task.FromResult(_jobRunStore.Values.Select(x => x.RunDate).Min());
+            
+            return Task.FromResult(_weekIndicatorStore.Values.Select(x => x.StartDate).Max());
         }
 
-        private async Task AggregateWeekInternal(AppDbContext dbContext, DateTime dateFrom, DateTime dateTo)
+        private async Task AggregateWeekInternal(DateTime dateFrom, DateTime dateTo)
         {
-            var weekIndicators = dbContext.ItemIndicators
+            var weekIndicators = _indicatorStore.Values
                 .Include(x => x.JobRun)
                 .AsNoTracking()
                 .Where(x => x.JobRun.RunDate >= dateFrom && x.JobRun.RunDate <= dateTo)
@@ -67,9 +72,8 @@ namespace MarketAnalyzer.Core.Calculation
                 result.ItemId = item.Key;
                 result.StartDate = dateFrom;
                 result.Duration = (dateTo - dateFrom).Days;
-                await dbContext.ItemWeekIndicators.AddAsync(result);
+                await _weekIndicatorStore.Add(result);
             }
-            await dbContext.SaveChangesAsync();
         }
 
         private ItemWeekIndicator AggregateItem(IEnumerable<ItemStatistic> items)

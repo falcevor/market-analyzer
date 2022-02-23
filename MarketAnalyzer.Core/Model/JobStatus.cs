@@ -1,4 +1,4 @@
-﻿namespace MarketAnalyzer.Data.Model
+﻿namespace MarketAnalyzer.Core.Model
 {
     public enum JobStatus
     {

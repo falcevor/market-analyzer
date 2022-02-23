@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MarketAnalyzer.Core.Abstraction;
+using MarketAnalyzer.Data.Petsistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +19,8 @@ namespace MarketAnalyzer.Data.Extensions
                     options.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
                 )
             );
+
+            services.AddSingleton(typeof(IStore<>), typeof(Store<>));
             return services;
         }
     }

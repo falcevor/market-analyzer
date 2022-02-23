@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace MarketAnalyzer.Data.Model
+namespace MarketAnalyzer.Core.Model
 {
-    public class ItemWeekIndicator
+    public class ItemWeekIndicator : Entity
     {
-        public long Id { get; set; }
         public long ItemId { get; set; }
         public Item Item { get; set; }
 

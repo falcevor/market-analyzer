@@ -1,8 +1,7 @@
-﻿namespace MarketAnalyzer.Data.Model
+﻿namespace MarketAnalyzer.Core.Model
 {
-    public class ItemIndicator
+    public class ItemIndicator : Entity
     {
-        public long Id { get; set; }
         public long ItemId { get; set; }
         public Item Item { get; set; }
         public long JobRunId { get; set; }
