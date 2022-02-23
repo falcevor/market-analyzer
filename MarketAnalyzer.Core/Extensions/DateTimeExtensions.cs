@@ -34,12 +34,12 @@ namespace MarketAnalyzer.Core.Extensions
             return remains > 7 ? 7 : remains;
         }
 
-        public static DateTimeInterval WeekBounds(this DateTime date)
+        public static (DateTime, DateTime) WeekBounds(this DateTime date)
         {
             var firstDay = date.FirstDayOfWeek();
             var lastDay = date.LastDayOfWeek().DayEnd();
 
-            return new DateTimeInterval(firstDay, lastDay);
+            return (firstDay, lastDay);
         }
 
         public static DateTime DayEnd(this DateTime date) 

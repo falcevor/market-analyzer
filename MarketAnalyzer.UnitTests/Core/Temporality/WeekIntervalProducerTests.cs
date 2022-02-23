@@ -16,20 +16,20 @@ namespace MarketAnalyzer.UnitTests.Core.Temporality
             var intervals = _producer.Produce(new DateTime(2022, 2, 1), new DateTime(2022, 2, 28));
             intervals.Should().BeEquivalentTo(new []
             {
-                new DateTimeInterval(new DateTime(2022, 2, 1), new DateTime(2022, 2, 7)),
-                new DateTimeInterval(new DateTime(2022, 2, 8), new DateTime(2022, 2, 14)),
-                new DateTimeInterval(new DateTime(2022, 2, 15), new DateTime(2022, 2, 21)),
-                new DateTimeInterval(new DateTime(2022, 2, 22), new DateTime(2022, 2, 28))
+                new DateTimeInterval(new DateTime(2022, 2, 1), new DateTime(2022, 2, 7, 23, 59, 59)),
+                new DateTimeInterval(new DateTime(2022, 2, 8), new DateTime(2022, 2, 14, 23, 59, 59)),
+                new DateTimeInterval(new DateTime(2022, 2, 15), new DateTime(2022, 2, 21, 23, 59, 59)),
+                new DateTimeInterval(new DateTime(2022, 2, 22), new DateTime(2022, 2, 28, 23, 59, 59))
             });
 
             intervals = _producer.Produce(new DateTime(2022, 1, 1), new DateTime(2022, 1, 31));
             intervals.Should().BeEquivalentTo(new[]
             {
-                new DateTimeInterval(new DateTime(2022, 1, 1),  new DateTime(2022, 1, 7)),
-                new DateTimeInterval(new DateTime(2022, 1, 8),  new DateTime(2022, 1, 14)),
-                new DateTimeInterval(new DateTime(2022, 1, 15), new DateTime(2022, 1, 21)),
-                new DateTimeInterval(new DateTime(2022, 1, 22), new DateTime(2022, 1, 28)),
-                new DateTimeInterval(new DateTime(2022, 1, 29), new DateTime(2022, 1, 31))
+                new DateTimeInterval(new DateTime(2022, 1, 1),  new DateTime(2022, 1, 7, 23, 59, 59)),
+                new DateTimeInterval(new DateTime(2022, 1, 8),  new DateTime(2022, 1, 14, 23, 59, 59)),
+                new DateTimeInterval(new DateTime(2022, 1, 15), new DateTime(2022, 1, 21, 23, 59, 59)),
+                new DateTimeInterval(new DateTime(2022, 1, 22), new DateTime(2022, 1, 28, 23, 59, 59)),
+                new DateTimeInterval(new DateTime(2022, 1, 29), new DateTime(2022, 1, 31, 23, 59, 59))
             });
         }
 
@@ -39,17 +39,17 @@ namespace MarketAnalyzer.UnitTests.Core.Temporality
             var intervals = _producer.Produce(new DateTime(2022, 2, 5), new DateTime(2022, 2, 25));
             intervals.Should().BeEquivalentTo(new[]
             {
-                new DateTimeInterval(new DateTime(2022, 2, 5), new DateTime(2022, 2, 7)),
-                new DateTimeInterval(new DateTime(2022, 2, 8), new DateTime(2022, 2, 14)),
-                new DateTimeInterval(new DateTime(2022, 2, 15), new DateTime(2022, 2, 21)),
-                new DateTimeInterval(new DateTime(2022, 2, 22), new DateTime(2022, 2, 25))
+                new DateTimeInterval(new DateTime(2022, 2, 5), new DateTime(2022, 2, 7, 23, 59, 59)),
+                new DateTimeInterval(new DateTime(2022, 2, 8), new DateTime(2022, 2, 14, 23, 59, 59)),
+                new DateTimeInterval(new DateTime(2022, 2, 15), new DateTime(2022, 2, 21, 23, 59, 59)),
+                new DateTimeInterval(new DateTime(2022, 2, 22), new DateTime(2022, 2, 25, 23, 59, 59))
             });
 
             intervals = _producer.Produce(new DateTime(2022, 2, 18), new DateTime(2022, 2, 25));
             intervals.Should().BeEquivalentTo(new[]
             {
-                new DateTimeInterval(new DateTime(2022, 2, 18), new DateTime(2022, 2, 21)),
-                new DateTimeInterval(new DateTime(2022, 2, 22), new DateTime(2022, 2, 25))
+                new DateTimeInterval(new DateTime(2022, 2, 18), new DateTime(2022, 2, 21, 23, 59, 59)),
+                new DateTimeInterval(new DateTime(2022, 2, 22), new DateTime(2022, 2, 25, 23, 59, 59))
             });
         }
     }
