@@ -9,7 +9,7 @@ namespace MarketAnalyzer.Core.Extensions
         public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
         {
             services.AddAutoMapper(config => config.AddProfile<AggregateProfile>());
-            services.AddSingleton<IAggregationService, AggregationService>();
+            services.AddScoped<IAggregationService, AggregationService>();
             return services;
         }
     }

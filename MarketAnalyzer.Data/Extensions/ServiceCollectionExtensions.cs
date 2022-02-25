@@ -14,13 +14,14 @@ namespace MarketAnalyzer.Data.Extensions
             var config = provider.GetRequiredService<IConfiguration>();
             var connectionString = config.GetConnectionString("Default");
 
-            services.AddDbContextFactory<AppDbContext>(builder =>
-                builder.UseNpgsql(connectionString, options =>
-                    options.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
+            services.AddDbContextFactory<AppDbContext>(builder => builder
+                .UseLazyLoadingProxies()
+                .UseNpgsql(connectionString, options => options
+                    .MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
                 )
             );
 
-            services.AddSingleton(typeof(IStore<>), typeof(Store<>));
+            services.AddScoped(typeof(IStore<>), typeof(Store<>));
             return services;
         }
     }

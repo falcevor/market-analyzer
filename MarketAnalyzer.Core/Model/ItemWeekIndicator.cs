@@ -5,7 +5,7 @@ namespace MarketAnalyzer.Core.Model
     public class ItemWeekIndicator : Entity
     {
         public long ItemId { get; set; }
-        public Item Item { get; set; }
+        public virtual Item Item { get; set; }
 
         public DateTime StartDate { get; set; }
         public int Duration { get; set; }

@@ -2,6 +2,6 @@
 {
     public interface IAggregationService
     {
-        Task AggregateItemIndicatorsByWeekAsync();
+        Task AggregateItemIndicatorsByWeekAsync(DateTime runDate);
     }
 }
